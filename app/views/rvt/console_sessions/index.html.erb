@@ -1,0 +1,17 @@
+<script>
+  var config = {
+    terminal: {
+      colors: <%= raw RVT.config.style.colors.to_json %>
+    },
+
+    transport: {
+      url: {
+        input: "<%= rvt.input_console_session_path(@console_session) %>",
+        pendingOutput: "<%= rvt.pending_output_console_session_path(@console_session) %>",
+        configuration: "<%= rvt.configuration_console_session_path(@console_session) %>"
+      },
+
+      uid: "<%= @console_session.uid %>"
+    }
+  };
+</script>

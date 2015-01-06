@@ -1,0 +1,21 @@
+language: ruby
+
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - 2.1
+  - 2.2
+  - jruby
+
+env:
+  global:
+    - JRUBY_OPTS=--dev
+
+sudo: false
+
+before_script:
+  - RAILS_ENV=test bundle exec rake --rakefile=test/dummy/Rakefile db:setup
+
+matrix:
+  allow_failures:
+    - rvm: jruby
