@@ -1,7 +1,5 @@
 ![logo](https://raw.github.com/gsamokovarov/rvt/master/.logo.png)
 
----
-
 A [VT100] compatible terminal, running on Rails.
 
 ## Requirements
