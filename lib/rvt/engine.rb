@@ -19,7 +19,7 @@ module RVT
 
       c.style = ActiveSupport::OrderedOptions.new.tap do |s|
         s.colors = 'light'
-        s.font   = '13px Menlo, DejaVu Sans Mono, Liberation Mono, monospace'
+        s.font   = 'large Menlo, DejaVu Sans Mono, Liberation Mono, monospace'
       end
     end
 
