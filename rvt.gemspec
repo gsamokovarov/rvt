@@ -8,7 +8,8 @@ Gem::Specification.new do |s|
   s.authors  = ['Genadi Samokovarov', 'Guillermo Iguaran']
   s.email    = ['gsamokovarov@gmail.com', 'guilleiguaran@gmail.com']
   s.homepage = 'https://github.com/gsamokovarov/rvt'
-  s.summary  = 'Remote Terminal for the Browser.'
+  s.summary  = 'A VT100 compatible terminal, running on Rails.'
+
   s.license  = 'MIT'
 
   s.files      = Dir['{app,config,db,lib,vendor}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.markdown']
