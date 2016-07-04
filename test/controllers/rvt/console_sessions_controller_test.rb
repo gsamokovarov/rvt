@@ -8,7 +8,8 @@ module RVT
     end
 
     test 'index is successful' do
-      get :index      assert_response :success
+      get :index
+      assert_response :success
     end
 
     test 'GET index creates new console session' do
