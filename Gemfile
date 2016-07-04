@@ -2,6 +2,10 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'rails-controller-testing'
+gem 'actionmailer'
+gem 'activerecord'
+
 group :development do
   gem 'puma'
 
