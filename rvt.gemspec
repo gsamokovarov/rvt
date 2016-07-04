@@ -15,12 +15,12 @@ Gem::Specification.new do |s|
   s.files      = Dir['{app,config,db,lib,vendor}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.markdown']
   s.test_files = Dir['test/**/*']
 
-  rails_version = '~> 4.0'
+  rails_version = '>= 4.0'
 
-  s.add_dependency 'railties',          rails_version
-  s.add_dependency 'activemodel',       rails_version
-  s.add_dependency 'coffee-rails',      '~> 4.0'
-  s.add_dependency 'sprockets-rails',   '>= 2.0', '< 4.0'
+  s.add_dependency 'railties',    rails_version
+  s.add_dependency 'activemodel', rails_version
+  s.add_dependency 'coffee-rails'
+  s.add_dependency 'sprockets-rails'
 
   # We need those for the testing application to run.
   s.add_development_dependency 'actionmailer', rails_version
