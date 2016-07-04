@@ -92,8 +92,8 @@ module RVT
 
     private
 
-      def mount_path
-        RVT::Engine.config.rvt.default_mount_path
-      end
+    def mount_path
+      RVT::Engine.config.rvt.default_mount_path
+    end
   end
 end

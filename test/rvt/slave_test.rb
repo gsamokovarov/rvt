@@ -58,14 +58,14 @@ module RVT
     { dispose: :SIGTERM, dispose!: :SIGKILL }.each do |method, signal|
       test "##{method} sends #{signal} to the process and detaches it" do
         Process.expects(:kill).with(signal, @slave.pid)
-        @slave.send(method)
+        @slave.public_send(method)
       end
 
       test "##{method} can reraise Errno::ESRCH if requested" do
         Process.expects(:kill).with(signal, @slave.pid)
         Process.stubs(:detach).raises(Errno::ESRCH)
 
-        assert_raises(Errno::ESRCH) { @slave.send(method, raise: true) }
+        assert_raises(Errno::ESRCH) { @slave.public_send(method, raise: true) }
       end
     end
   end
