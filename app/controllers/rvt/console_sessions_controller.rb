@@ -22,14 +22,14 @@ module RVT
       @console_session = ConsoleSession.find_by_pid_and_uid(params[:id], params[:uid])
       @console_session.send_input(console_session_params[:input])
 
-      render nothing: true
+      head :no_content
     end
 
     def configuration
       @console_session = ConsoleSession.find_by_pid_and_uid(params[:id], params[:uid])
       @console_session.configure(console_session_params)
 
-      render nothing: true
+      head :no_content
     end
 
     def pending_output

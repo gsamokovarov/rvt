@@ -8,57 +8,56 @@ module RVT
     end
 
     test 'index is successful' do
-      get :index, use_route: 'rvt'
-      assert_response :success
+      get :index      assert_response :success
     end
 
     test 'GET index creates new console session' do
       assert_difference 'ConsoleSession::INMEMORY_STORAGE.size' do
-        get :index, use_route: 'rvt'
+        get :index
       end
     end
 
     test 'PUT input validates for missing input' do
-      get :index, use_route: 'rvt'
+      get :index
 
       assert_not_nil console_session = assigns(:console_session)
 
       console_session.instance_variable_get(:@slave).stubs(:send_input).raises(ArgumentError)
-      put :input, id: console_session.pid, uid: console_session.uid, use_route: 'rvt'
+      put :input, params: { id: console_session.pid, uid: console_session.uid }
 
       assert_response :unprocessable_entity
     end
 
     test 'PUT input sends input to the slave' do
-      get :index, use_route: 'rvt'
+      get :index
 
       assert_not_nil console_session = assigns(:console_session)
 
       console_session.expects(:send_input)
-      put :input, input: ' ', id: console_session.pid, uid: console_session.uid, use_route: 'rvt'
+      put :input, params: { input: ' ', id: console_session.pid, uid: console_session.uid }
     end
 
     test 'GET pending_output gives the slave pending output' do
-      get :index, use_route: 'rvt'
+      get :index
 
       assert_not_nil console_session = assigns(:console_session)
       console_session.expects(:pending_output)
 
-      get :pending_output, id: console_session.pid, uid: console_session.uid, use_route: 'rvt'
+      get :pending_output, params: { id: console_session.pid, uid: console_session.uid }
     end
 
     test 'GET pending_output raises 410 on exitted slave processes' do
-      get :index, use_route: 'rvt'
+      get :index
 
       assert_not_nil console_session = assigns(:console_session)
       console_session.stubs(:pending_output).raises(ConsoleSession::Unavailable)
 
-      get :pending_output, id: console_session.pid, uid: console_session.uid, use_route: 'rvt'
+      get :pending_output, params: { id: console_session.pid, uid: console_session.uid }
       assert_response :gone
     end
 
     test 'PUT configuration adjust the terminal size' do
-      get :index, use_route: 'rvt'
+      get :index
 
       assert_not_nil console_session = assigns(:console_session)
       console_session.expects(:configure).with(
@@ -68,25 +67,24 @@ module RVT
         'height' => '24',
       )
 
-      put :configuration, id: console_session.pid, uid: console_session.uid, width: 80, height: 24, use_route: 'rvt'
+      put :configuration, params: { id: console_session.pid, uid: console_session.uid, width: 80, height: 24 }
       assert_response :success
     end
 
     test 'blocks requests from non-whitelisted ips' do
       @request.stubs(:remote_ip).returns('128.0.0.1')
-      get :index, use_route: 'rvt'
+      get :index
       assert_response :unauthorized
     end
 
     test 'allows requests from whitelisted ips' do
       @request.stubs(:remote_ip).returns('127.0.0.1')
-      get :index, use_route: 'rvt'
+      get :index
       assert_response :success
     end
 
     test 'index generated path' do
       assert_generates mount_path, {
-        use_route: 'rvt',
         controller: 'console_sessions'
       }, {}, {controller: 'console_sessions'}
     end
