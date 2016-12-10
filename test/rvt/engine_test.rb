@@ -11,15 +11,6 @@ module RVT
       end
     end
 
-    test 'disabling automounting' do
-      new_uninitialized_app do |app|
-        app.config.rvt.automount = false
-        app.initialize!
-
-        assert_not app.routes.named_routes['rvt']
-      end
-    end
-
     test 'blank commands are expanded to the rails console' do
       new_uninitialized_app do |app|
         app.config.rvt.command = ' '

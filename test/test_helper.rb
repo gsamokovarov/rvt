@@ -7,6 +7,8 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require "rails/test_help"
 
+require 'pty'
+
 Rails.backtrace_cleaner.remove_silencers!
 
 # Load support files
@@ -25,3 +27,5 @@ if ActiveSupport::TestCase.method_defined?(:fixture_path=)
 end
 
 require 'mocha/mini_test'
+
+require 'byebug'

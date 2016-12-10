@@ -4,61 +4,61 @@ module RVT
   class ConsoleSessionsControllerTest < ActionController::TestCase
     setup do
       PTY.stubs(:spawn).returns([StringIO.new, StringIO.new, Random.rand(20000)])
-      @request.stubs(:remote_ip).returns('127.0.0.1')
+      RVT.config.whitelisted_ips.stubs(:include?).returns(true)
     end
 
     test 'index is successful' do
-      get :index
+      get :index, use_route: 'rvt'
       assert_response :success
     end
 
     test 'GET index creates new console session' do
       assert_difference 'ConsoleSession::INMEMORY_STORAGE.size' do
-        get :index
+        get :index, use_route: 'rvt'
       end
     end
 
     test 'PUT input validates for missing input' do
-      get :index
+      get :index, use_route: 'rvt'
 
       assert_not_nil console_session = assigns(:console_session)
 
       console_session.instance_variable_get(:@slave).stubs(:send_input).raises(ArgumentError)
-      put :input, params: { id: console_session.pid, uid: console_session.uid }
+      put :input, id: console_session.pid, uid: console_session.uid, use_route: 'rvt'
 
       assert_response :unprocessable_entity
     end
 
     test 'PUT input sends input to the slave' do
-      get :index
+      get :index, use_route: 'rvt'
 
       assert_not_nil console_session = assigns(:console_session)
 
       console_session.expects(:send_input)
-      put :input, params: { input: ' ', id: console_session.pid, uid: console_session.uid }
+      put :input, use_route: 'rvt', input: ' ', id: console_session.pid, uid: console_session.uid
     end
 
     test 'GET pending_output gives the slave pending output' do
-      get :index
+      get :index, use_route: 'rvt'
 
       assert_not_nil console_session = assigns(:console_session)
       console_session.expects(:pending_output)
 
-      get :pending_output, params: { id: console_session.pid, uid: console_session.uid }
+      get :pending_output, use_route: 'rvt', id: console_session.pid, uid: console_session.uid
     end
 
-    test 'GET pending_output raises 410 on exitted slave processes' do
-      get :index
+    test 'GET pending_output raises 410 on exited slave processes' do
+      get :index, use_route: 'rvt'
 
       assert_not_nil console_session = assigns(:console_session)
       console_session.stubs(:pending_output).raises(ConsoleSession::Unavailable)
 
-      get :pending_output, params: { id: console_session.pid, uid: console_session.uid }
+      get :pending_output, use_route: 'rvt', id: console_session.pid, uid: console_session.uid
       assert_response :gone
     end
 
     test 'PUT configuration adjust the terminal size' do
-      get :index
+      get :index, use_route: 'rvt'
 
       assert_not_nil console_session = assigns(:console_session)
       console_session.expects(:configure).with(
@@ -68,32 +68,30 @@ module RVT
         'height' => '24',
       )
 
-      put :configuration, params: { id: console_session.pid, uid: console_session.uid, width: 80, height: 24 }
+      put :configuration, id: console_session.pid, uid: console_session.uid, width: 80, height: 24, use_route: 'rvt'
       assert_response :success
     end
 
     test 'blocks requests from non-whitelisted ips' do
-      @request.stubs(:remote_ip).returns('128.0.0.1')
-      get :index
+      RVT.config.whitelisted_ips.stubs(:include?).returns(false)
+      get :index, use_route: 'rvt'
       assert_response :unauthorized
     end
 
     test 'allows requests from whitelisted ips' do
-      @request.stubs(:remote_ip).returns('127.0.0.1')
-      get :index
+      RVT.config.whitelisted_ips.stubs(:include?).returns(true)
+      get :index, use_route: 'rvt'
       assert_response :success
-    end
-
-    test 'index generated path' do
-      assert_generates mount_path, {
-        controller: 'console_sessions'
-      }, {}, {controller: 'console_sessions'}
     end
 
     private
 
-    def mount_path
-      RVT::Engine.config.rvt.default_mount_path
+    def get(*)
+      ActiveSupport::Deprecation.silence { super }
+    end
+
+    def put(*)
+      ActiveSupport::Deprecation.silence { super }
     end
   end
 end

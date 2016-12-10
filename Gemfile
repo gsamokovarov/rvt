@@ -9,6 +9,8 @@ gem 'activerecord'
 group :development do
   gem 'puma'
 
+  gem 'byebug'
+
   # Only require this one explicitly.
   gem 'pry-rails', require: false
 

@@ -8,7 +8,7 @@ module RVT
       remote_ip = GetSecureIp.new(request, RVT.config.whitelisted_ips).to_s
 
       unless remote_ip.in?(RVT.config.whitelisted_ips)
-        render nothing: true, status: :unauthorized
+        head :unauthorized
       end
     end
 
