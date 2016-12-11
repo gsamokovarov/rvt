@@ -45,7 +45,11 @@ module RVT
     # won't be set.
     def configure(options = {})
       dimentions = options.values_at(:height, :width).collect(&:to_i)
-      @input.winsize = dimentions unless dimentions.any?(&:zero?)
+      begin
+        @input.winsize = dimentions
+      rescue TypeError
+        @input.winsize = [*dimentions, 0, 0]
+      end if dimentions.none?(&:zero?)
     end
 
     # Sends input to the slave process STDIN.
