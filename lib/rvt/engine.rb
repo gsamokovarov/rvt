@@ -17,6 +17,10 @@ module RVT
       c.term               = 'xterm-color'
       c.whitelisted_ips    = ['127.0.0.1', '::1']
 
+      # Rails 5 defaults on Puma as a web server, so we can be long polling by
+      # default.
+      c.timeout = 45.seconds if ::Rails.version >= '5.0.0'
+
       c.style = ActiveSupport::OrderedOptions.new.tap do |s|
         s.colors = 'light'
         s.font   = 'large Menlo, DejaVu Sans Mono, Liberation Mono, monospace'
