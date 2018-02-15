@@ -29,9 +29,9 @@ var AJAXTransport = (function(RVT) {
   AJAXTransport.prototype.initializeEventHandlers = function() {
     this.on('input', this.sendInput);
     this.on('configuration', this.sendConfiguration);
-    this.once('initialization', function(cols, rows) {
-      this.emit('configuration', cols, rows);
+    this.once('initialization', function(callback) {
       this.pollForPendingOutput();
+      callback && callback();
     });
   };
 
@@ -119,10 +119,8 @@ var AJAXTransport = (function(RVT) {
 
   // Send the terminal configuration to the server.
   //
-  // Right now by configuration, we understand the terminal widht and terminal
+  // Right now by configuration, we understand the terminal width and terminal
   // height.
-  //
-  // RVT#resized is an alias for RVT#sendconfiguration.
   AJAXTransport.prototype.sendConfiguration = function(cols, rows) {
     if (this.disconnected) return;
 
@@ -139,17 +137,19 @@ var AJAXTransport = (function(RVT) {
 }).call(this, RVT);
 
 window.addEventListener('load', function() {
-  var geometry = calculateFitScreenGeometry();
-  config.terminal.cols = geometry[0];
-  config.terminal.rows = geometry[1];
+  var terminal = window.terminal = new RVT.Terminal(RVT.config.terminal);
 
-  var terminal = window.terminal = new RVT.Terminal(config.terminal);
+  terminal.open(document.querySelector('#terminal'));
+
+  terminal.on('resize', function(options) {
+    transport.emit('configuration', options.cols, options.rows);
+  });
 
   terminal.on('data', function(data) {
     transport.emit('input', data);
   });
 
-  var transport = new AJAXTransport(config.transport);
+  var transport = new AJAXTransport(RVT.config.transport);
 
   transport.on('pendingOutput', function(response) {
     var json = JSON.parse(response);
@@ -160,23 +160,9 @@ window.addEventListener('load', function() {
     terminal.destroy();
   });
 
-  transport.emit('initialization', terminal.cols, terminal.rows);
-
-  // Utilities
-  // ---------
-
-  function calculateFitScreenGeometry() {
-    // Currently, resizing term.js is broken. E.g. opening vi causes it to go
-    // back to 80x24 and fail with off-by-one error. Other stuff, like chip8
-    // are rendered incorrectly and so on.
-    //
-    // To work around it, create a temporary terminal, just so we can get the
-    // best dimensions for the screen.
-    var temporary = new RVT.Terminal;
-    try {
-      return temporary.fitScreen();
-    } finally {
-      temporary.destroy();
-    }
-  }
+  transport.emit('initialization', function() {
+    terminal.fit();
+    terminal.toggleFullScreen();
+    terminal.focus();
+  });
 });

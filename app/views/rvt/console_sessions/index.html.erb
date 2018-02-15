@@ -1,7 +1,10 @@
 <script>
-  var config = {
+  // Expose the main RVT namespace.
+  this.RVT || (this.RVT = {});
+
+  RVT.config = {
     terminal: {
-      colors: <%= raw RVT.config.style.colors.to_json %>
+      theme: <%= raw RVT.config.style.colors.to_json %>
     },
 
     transport: {
@@ -15,3 +18,5 @@
     }
   };
 </script>
+
+<div id="terminal"></div>

@@ -1,6 +1,9 @@
 <% RVT.config.style.instance_eval do %>
-  body { color: <%= colors.foreground %>; background: <%= colors.background %>; margin: 0; padding: 0; }
-
-  .terminal { float: left; overflow: hidden; font: <%= font %>; }
-  .terminal-cursor { color: <%= colors.background %>; background: <%= colors.foreground %>; }
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: <%= colors.foreground %>;
+  }
+  .terminal { height: 100vh; }
 <% end %>
