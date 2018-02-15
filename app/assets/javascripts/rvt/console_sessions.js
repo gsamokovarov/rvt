@@ -137,6 +137,7 @@ var AJAXTransport = (function(RVT) {
 }).call(this, RVT);
 
 window.addEventListener('load', function() {
+
   var terminal = window.terminal = new RVT.Terminal(RVT.config.terminal);
 
   terminal.open(document.querySelector('#terminal'));
@@ -165,4 +166,5 @@ window.addEventListener('load', function() {
     terminal.toggleFullScreen();
     terminal.focus();
   });
+
 });
