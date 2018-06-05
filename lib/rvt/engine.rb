@@ -22,8 +22,7 @@ module RVT
       c.timeout = 45.seconds if ::Rails.version >= '5.0.0'
 
       c.style = ActiveSupport::OrderedOptions.new.tap do |s|
-        s.colors = 'light'
-        s.font   = 'large Menlo, DejaVu Sans Mono, Liberation Mono, monospace'
+        s.font = 'large Menlo, DejaVu Sans Mono, Liberation Mono, monospace'
       end
     end
 
@@ -71,17 +70,6 @@ module RVT
         if c.command.blank?
           local_rails = Rails.root.join('bin/rails')
           c.command = "#{local_rails.executable? ? local_rails : 'rails'} console"
-        end
-      end
-    end
-
-    initializer 'rvt.process_colors' do
-      config.rvt.style.tap do |c|
-        case colors = c.colors
-        when Symbol, String
-          c.colors = Colors[colors] || Colors.default
-        else
-          c.colors = Colors.new(colors)
         end
       end
     end

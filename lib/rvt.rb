@@ -1,7 +1,6 @@
 require 'active_support/lazy_load_hooks'
 require 'active_support/inflector'
 
-require 'rvt/colors'
 require 'rvt/engine'
 require 'rvt/slave'
 

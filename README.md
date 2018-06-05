@@ -160,67 +160,10 @@ class Application < Rails::Application
 end
 ```
 
-Styling
--------
+## Styling
 
 If you would like to style the terminal a bit different than the default
 appearance, you can do so with the following options.
-
-### config.rvt.style.colors
-
-_RVT_ supports up to 256 color themes, though most of the common
-terminal themes are usually just 16 colors.
-
-The default color theme is a white-on-black theme called `light`. For
-different appearance you may want to experiment with the other included color
-themes.
-
-- `monokai` _the default Sublime Text colors_
-- `solarized_dark` _light version of the common solarized colors_
-- `solarized_light` _dark version of the common solarized colors_
-- `tango` _theme based on the tango colors_
-- `xterm` _the standard xterm theme_
-
-If you would like to use a custom theme, you may do so with the following
-syntax.
-
-```ruby
-class Application < Rails::Application
-  # First, you have to define and register your custom color theme. Each color
-  # theme is mapped to a name.
-  RVT::Colors.register_theme(:custom) do |c|
-    # The most common color themes are the 16 colors one. They are built from 3
-    # parts.
-
-    # 8 darker colors.
-    c.add '#000000'
-    c.add '#cd0000'
-    c.add '#00cd00'
-    c.add '#cdcd00'
-    c.add '#0000ee'
-    c.add '#cd00cd'
-    c.add '#00cdcd'
-    c.add '#e5e5e5'
-
-    # 8 lighter colors.
-    c.add '#7f7f7f'
-    c.add '#ff0000'
-    c.add '#00ff00'
-    c.add '#ffff00'
-    c.add '#5c5cff'
-    c.add '#ff00ff'
-    c.add '#00ffff'
-    c.add '#ffffff'
-
-    # Background and foreground colors.
-    c.background '#ffffff'
-    c.foreground '#000000'
-  end
-
-  # Now you have to tell RVT to actually use it.
-  config.rvt.style.colors = :custom
-end
-```
 
 ### config.rvt.style.font
 
@@ -236,11 +179,6 @@ By default it is `large DejaVu Sans Mono, Liberation Mono, monospace`.
 While spawning processes is relatively cheap on _MRI_, this is not the case in
 _JRuby_. Spawning another process is slow. Spawning another **JRuby** process
 is even slower. Read more about the problem at the _JRuby_ [wiki].
-
-### Changing the colors is broken.
-
-Some of the style sheets may be cached on the file system. Run
-`rake tmp:cache:clear` to clear those up.
 
   [Puma]: http://puma.io/
   [VT100]: http://en.wikipedia.org/wiki/VT100
