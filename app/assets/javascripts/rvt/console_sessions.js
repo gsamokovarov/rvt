@@ -74,7 +74,7 @@ var AJAXTransport = (function(RVT) {
       if (request.readyState === XMLHttpRequest.DONE) {
         if (request.status === 200) {
           self.emit('pendingOutput', request.responseText);
-          self.pollForPendingOutput();
+          setTimeout(self.pollForPendingOutput.bind(self));
         } else {
           self.emit('disconnect', request);
         }
@@ -88,8 +88,6 @@ var AJAXTransport = (function(RVT) {
   //
   // Each key press is encoded to an intermediate format, before it is sent to
   // the server.
-  //
-  // RVT#keysPressed is an alias for RVT#sendInput.
   AJAXTransport.prototype.sendInput = function(input) {
     input || (input = '');
 
