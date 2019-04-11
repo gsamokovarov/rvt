@@ -1,4 +1,4 @@
-<script>
+<%= javascript_tag nonce: true do %>
   // Expose the main RVT namespace.
   this.RVT || (this.RVT = {});
 
@@ -17,6 +17,6 @@
       uid: "<%= @console_session.uid %>"
     }
   };
-</script>
+<% end %>
 
 <div id="terminal"></div>
