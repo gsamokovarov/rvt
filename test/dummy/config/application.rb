@@ -25,5 +25,7 @@ module Dummy
 
     # The test order can be random after 4.1.
     config.active_support.test_order = :random
+
+    config.active_record.sqlite3.represent_boolean_as_integer = true
   end
 end
