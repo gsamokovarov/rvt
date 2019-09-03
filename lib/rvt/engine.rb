@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ipaddr'
 require 'active_support/core_ext/numeric/time'
 require 'rails/engine'
@@ -19,7 +21,7 @@ module RVT
 
       # Rails 5 defaults on Puma as a web server, so we can be long polling by
       # default.
-      c.timeout = 45.seconds if ::Rails.version >= '5.0.0'
+      c.timeout ||= 45.seconds if ::Rails.version >= '5.0.0'
 
       c.style = ActiveSupport::OrderedOptions.new.tap do |s|
         s.font = 'large Menlo, DejaVu Sans Mono, Liberation Mono, monospace'
