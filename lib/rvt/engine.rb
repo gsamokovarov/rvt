@@ -16,8 +16,12 @@ module RVT
       c.command            = nil
       c.default_mount_path = '/console'
       c.timeout            = 0.seconds
+      c.process_timeout    = 5.minutes
       c.term               = 'xterm-color'
       c.whitelisted_ips    = ['127.0.0.1', '::1']
+      c.allowed_envs       = %w(test development)
+      c.username           = ''
+      c.password           = ''
 
       # Rails 5 defaults on Puma as a web server, so we can be long polling by
       # default.
@@ -31,7 +35,7 @@ module RVT
     initializer 'rvt.add_default_route' do |app|
       # While we don't need the route in the test environment, we define it
       # there as well, so we can easily test it.
-      if config.rvt.automount && (Rails.env.development? || Rails.env.test?)
+      if config.rvt.automount && Array(config.rvt.allowed_envs).include?(Rails.env)
         app.routes.append do
           mount RVT::Engine => app.config.rvt.default_mount_path
         end
@@ -71,7 +75,14 @@ module RVT
         # generator, so bin/rails may not be available.
         if c.command.blank?
           local_rails = Rails.root.join('bin/rails')
-          c.command = "#{local_rails.executable? ? local_rails : 'rails'} console"
+          timeout_path = `which timeout`.chomp
+          timeout_suffix =
+            if timeout_path.present? && c.process_timeout.present?
+              "#{timeout_path} #{c.process_timeout.to_i}"
+            else
+              ''
+            end
+          c.command = "#{timeout_suffix} #{local_rails.executable? ? local_rails : 'rails'} console"
         end
       end
     end

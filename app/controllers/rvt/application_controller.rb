@@ -5,9 +5,13 @@ module RVT
 
     before_action :prevent_unauthorized_requests!
 
+    http_basic_authenticate_with name: RVT.config.username, password: RVT.config.password if RVT.config.username.present? && RVT.config.password.present?
+
     private
 
     def prevent_unauthorized_requests!
+      return if RVT.config.whitelisted_ips.blank?
+
       remote_ip = GetSecureIp.new(request, RVT.config.whitelisted_ips).to_s
 
       unless remote_ip.in?(RVT.config.whitelisted_ips)
