@@ -79,6 +79,9 @@ Again, note that this network doesn't allow `127.0.0.1`. If you want to access
 the console, you have to do so from it's external IP or add `127.0.0.1` to the
 mix.
 
+Finally, if you want to access to console from everywhere (or you have to filter
+traffic on another level) just set blank value in `config.rvt.whitelisted_ips`.
+
 ### config.rvt.default_mount_path
 
 By default, the console will be automatically mounted on `/console`.
@@ -125,6 +128,12 @@ _Poor man's solution to SSH._ ![boom](http://f.cl.ly/items/3n2h0p1w0B261u2d201b/
 traffic, otherwise all the input (including the negotiated username and
 password) can be easily sniffed!**
 
+### config.rvt.process_timeout
+
+By default, _RVT_ terminate kill a running console after 5 minutes. If you
+want to change this behaviour set integer value in seconds. If you want
+to not kill any process - set empty value.
+
 ### config.rvt.term
 
 By default, the _RVT_ terminal will report itself as `xterm-color`. You
@@ -159,6 +168,14 @@ class Application < Rails::Application
   config.rvt.timeout = 45.seconds
 end
 ```
+
+### config.rvt.username and config.rvt.password
+
+By default there is no authentication in _RVT_. If you want slightly increase
+the security and add basic authentication just set any value into these configs.
+
+But remember, this is not protect you from anything strong. Mostly, this is about
+a separation of the privileges within private networks or about something similar.
 
 ## Styling
 
